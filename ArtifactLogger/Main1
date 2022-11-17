@@ -64,7 +64,7 @@ local JoinCheck = function(UserID)
           return false,"[ERROR?](https://www.roblox.com/home)"
        end
     else
-       return false,"[INVALID COOKIE](https://www.roblox.com/login"
+       return false,"[INVALID COOKIE](https://www.roblox.com/login)"
     end
 end
 
