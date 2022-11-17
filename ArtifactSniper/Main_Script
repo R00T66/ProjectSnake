@@ -10,7 +10,11 @@ if game.PlaceId == (5208655184) then
     local RunService = game:GetService("RunService")
     local Workspace = game:GetService("Workspace")
     local Players = game:GetService("Players")
-
+    
+    -- Globals
+    
+    _G.ActiveSniping = true
+    
     -- Locales
 
     local Client = Players.LocalPlayer
