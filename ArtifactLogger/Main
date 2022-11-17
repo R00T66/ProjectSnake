@@ -49,13 +49,13 @@ end
 local JoinCheck = function(UserID)
     local JoinRequest;
       
-    pcall(function() JoinRequest = syn.request({
+    pcall(function() JoinRequest = HttpService:JSONDecode(syn.request({
           Url = "https://api.roblox.com/Users/" .. tostring(UserID) .. "/OnlineStatus",
           Method = "GET",
           Headers = {
            ["Cookie"] = ".ROBLOSECURITY=" .. Settings["RogueCookie"]
           }
-    }) end)
+    }).Body) end)
   
     if JoinRequest ~= nil then
        if JoinRequest.GameId ~= nil then
@@ -64,7 +64,7 @@ local JoinCheck = function(UserID)
           return false,"[ERROR?](https://www.roblox.com/home)"
        end
     else
-       return false,"[INVALID COOKIE](https://www.roblox.com/login)"
+       return "Error","[INVALID COOKIE](https://www.roblox.com/login)"
     end
 end
 
@@ -79,6 +79,13 @@ local GetPlayers = function()
           local Check,Msg = JoinCheck(v.UserId)
           if Check == true then
              table.insert(Player_Log, Fix_Player(v.Name, v.UserId))
+          end
+          if Check == "Error" then
+             Player_Log = { }
+             for z, x in pairs(Players:GetPlayers()) do
+                table.insert(Player_Log, Fix_Player(x.Name, x.UserId))
+             end
+             break;
           end
        end
    else
@@ -118,7 +125,8 @@ local CreateEmbed = function(Type, Artifact, Location, Player)
          ["color"] = 62975,
          ["fields"] = {
           {name = "ARTIFACT", value = Artifact, inline = false},
-          {name = "LOCATION", value = Location, inline = false}
+          {name = "LOCATION", value = Location, inline = false},
+          {name = "FOUND BY", value = tostring(Client.Name), inline = false}
          },
          ["thumbnail"] = {
           ["url"] = contentphoto
