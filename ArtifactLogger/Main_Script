@@ -156,6 +156,18 @@ local SendHook = function(Hook, Data)
    return S
 end
 
+local AttemptView = function(Player)
+   if Player.Character then
+      if Player.Character:FindFirstChild("Head") then
+         
+         local Camera = workspace.CurrentCamera
+         
+         Camera.CameraSubject = Player.Character:FindFirstChild("Head")
+         Camera.CameraType = Enum.CameraType.Custom
+      end
+   end
+end
+
 local BackpackConnection = function(Player)
    if Player:FindFirstChild("Backpack") then
       local Backpack = Player:FindFirstChild("Backpack")
@@ -168,6 +180,10 @@ local BackpackConnection = function(Player)
                    local Create_Tag = CreateTag("Logged", Tool)
                    local Hook = Settings["BackpackHook"]
                    local Req = SendHook(Hook, Embed_Backpack)
+                end
+                
+                if _G.ActiveSniping == true then
+                   AttemptView(Player)
                 end
              end
           end          
@@ -189,6 +205,10 @@ local CharacterConnection = function(Player)
              if tostring(Tool.Name) == i and not Tool:FindFirstChild("Logged") then
                 
                 local Embed_Backpack = CreateEmbed("backpack", i, nil, Player)
+ 
+                if _G.ActiveSniping == true then
+                   AttemptView(Player)
+                end
                 
                 if Settings["BackpackHook"] ~= nil then
                    local Create_Tag = CreateTag("Logged", Tool)
