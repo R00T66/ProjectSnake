@@ -1,0 +1,44 @@
+    local Workspace = game:GetService("Workspace")   
+    
+    local FindBankerPart = function(Position, NewName)
+        local NPCS = Workspace:WaitForChild("NPCs")
+        local Yield = 0
+        local Returns = nil
+
+        repeat wait()
+        for i, x in pairs(NPCS:GetChildren()) do
+          if x:FindFirstChild("HumanoidRootPart") and x.Name == "Banker" then
+              local Root = x:FindFirstChild("HumanoidRootPart")
+              local RealPos = Vector3.new(math.floor(Position.X), math.floor(Position.Y), math.floor(Position.Z))
+              local RootPos = Vector3.new(math.floor(Root.Position.X), math.floor(Root.Position.Y), math.floor(Root.Position.Z))
+              if RootPos == RealPos then
+                  Returns = Root
+              end
+          end
+        end
+        until Returns ~= nil 
+
+        if _G.Settings ~= nil then
+           if not table.find(_G.Settings["Blacklist"], Client.UserId) then
+              if Returns == nil then 
+                 warn("FAILED TO FIND", NewName:upper()) 
+              else 
+
+              end
+           end
+        end
+
+
+        return Returns
+    end
+    
+    local Bankers = {
+      ["Desert 4"] = FindBankerPart(Vector3.new(-447.12, 334.094, 282.152), "Desert"),
+      ["Tundra 5"] = FindBankerPart(Vector3.new(6093.23, 1351.29, 148.178), "Tundra"),
+      ["Isle Of Eth"] = FindBankerPart(Vector3.new(-64.3541, 205.495, 2363.51), "Isle Of Eth"),
+      ["Mage Hideout"] = FindBankerPart(Vector3.new(-410.59, 270.5, 994.757), "Mage Hideout"),
+      ["Oresfall"] = FindBankerPart(Vector3.new(2913.54, 303.75, -88.6681), "Oresfall"),
+      ["Shore 4"] = FindBankerPart(Vector3.new(1365.25, 423.197, 2814.2), "Shore")
+     }
+ 
+     return Bankers
