@@ -13,7 +13,7 @@ local HttpService = game:GetService("HttpService")
 
 local Settings = {["BagHook"] = nil, ["BackpackHook"] = nil, ["RogueCookie"] = nil}
 local Artifacts = loadstring(game:HttpGet("https://raw.githubusercontent.com/R00T66/ProjectSnake/main/ArtifactLogger/Artifacts"))()
-local Bankers = loadstring(game:HttpGet("https://raw.githubusercontent.com/R00T66/ProjectSnake/main/ArtifactLogger/Bankers"))()
+local Bankers = loadstring(game:HttpGet("https://raw.githubusercontent.com/R00T66/ProjectSnake/main/ArtifactLogger/Banker_List"))()
 
 local Client = Players.LocalPlayer
 local Thrown = workspace:WaitForChild("Thrown")
