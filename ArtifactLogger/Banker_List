@@ -1,4 +1,5 @@
     local Workspace = game:GetService("Workspace")   
+    local Client = game.Players.LocalPlayer
     
     local FindBankerPart = function(Position, NewName)
         local NPCS = Workspace:WaitForChild("NPCs")
