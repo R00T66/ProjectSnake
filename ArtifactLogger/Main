@@ -267,9 +267,9 @@ end
 
 -- setup 
 
-if _G.Settings ~= nil then
-   if _G.Settings["ArtifactLogger"] ~= nil then
-       local ArtifactLogger_Settings = _G.Settings["ArtifactLogger"]
+if _G.Hooks ~= nil then
+   if _G.Hooks["ArtifactLogger"] ~= nil then
+       local ArtifactLogger_Settings = _G.Hooks["ArtifactLogger"]
        
        Settings["BagHook"] = ArtifactLogger_Settings["BagHook"]
        Settings["BackpackHook"] = ArtifactLogger_Settings["BackpackHook"]
