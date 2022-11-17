@@ -297,9 +297,6 @@ if game.PlaceId == (5208655184) then
         until GameVolume_Yield > 99
     end)
 
-    coroutine.resume(ThreadVolume)
-    coroutine.resume(ThreadGFX)
-
     local ToggleChat = function(self)
         if self:lower() == "/e dance" then 
             _G.ActiveSniping = not _G.ActiveSniping 
@@ -310,6 +307,8 @@ if game.PlaceId == (5208655184) then
     local SetupScript = function()
         if SetupGlobalSettings() ~= false then
             _G.ActiveSniping = true
+            coroutine.resume(ThreadVolume)
+            coroutine.resume(ThreadGFX)
             SetupHooks()
             FindAssociatedBanker()
             RunService.Stepped:Connect(RunSnakerBot)
