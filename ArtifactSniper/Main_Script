@@ -188,13 +188,17 @@ if game.PlaceId == (5208655184) then
                 Nearest = i
             end
         end
-
+        
+        local Hook = nil
+        
         if Client.Backpack:FindFirstChild(Item) then
             Embed = CreateEmbed("SUCCESS", Client.Name, Item, Nearest)
             Sniped = true
+            Hook = _G.SnipeHook
         else
             Embed = CreateEmbed("ERROR", Client.Name, Item, Nearest)
             Sniped = false
+            Hook = _G.MissHook
         end
 
         PostEmbed(Hook, Embed)
