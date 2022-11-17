@@ -1,0 +1,149 @@
+-- loading
+
+repeat wait() until game.IsLoaded
+repeat wait() until game:GetService("Players").LocalPlayer
+
+-- leaderboard setup
+
+local LeaderboardGui = game:GetService("StarterGui"):WaitForChild("LeaderboardGui"):Clone()
+local Scrolling = LeaderboardGui:WaitForChild("MainFrame"):WaitForChild("ScrollingFrame")
+local PlayerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+local Menu = PlayerGui:WaitForChild("StartMenu", 30)
+local Ext = Instance.new("Folder")
+
+-- defining leaderboard stuff
+
+Ext.Name = "Real"
+Ext.Parent = LeaderboardGui
+
+-- esp
+
+local PlayerESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/R00T66/BIN/main/EL2/Kiriot22.lua"))()
+PlayerESP.Boxes = false
+PlayerESP.FaceCamera = true
+PlayerESP.Color = Color3.fromRGB(0, 255, 0)
+PlayerESP:Toggle(true)
+
+-- menu check
+
+if Menu == nil then
+   return
+end
+
+-- locales
+
+local MenuClient = Menu:WaitForChild("MenuClient")
+local CurrentSubject = nil
+local Viewing = false
+
+-- functions
+
+local GetCurrentPlacing = function()
+   if game:GetService("Players").LocalPlayer.Character then
+       return game:GetService("Players").LocalPlayer.Character
+   else
+       return workspace
+   end
+end
+
+local UpdateCamera = function()
+   local Cam = workspace.CurrentCamera
+   local Pla = GetCurrentPlacing()
+   
+   Cam.CameraSubject = Pla 
+   
+   if Pla == workspace then
+      Cam.CameraType = Enum.CameraType.Scriptable
+   else
+      Cam.CameraType = Enum.CameraType.Custom
+   end
+end
+
+local SetCameraView = function(Spec)
+   local Cam = workspace.CurrentCamera
+   if Spec then
+       Cam.CameraSubject = CurrentSubject
+       Cam.CameraType = Enum.CameraType.Custom
+   elseif not Spec then
+       UpdateCamera()
+   end
+end
+
+local FixNames = function()
+   for z, v in pairs(game.Players:GetPlayers()) do
+       if v.Character then
+           for i, x in pairs(v.Character:GetDescendants()) do
+              if x.Name == "FakeHumanoid" then
+                 x.NameDisplayDistance = 35235325
+              end
+              if x.Name == "Humanoid" then
+                 x.NameDisplayDistance = 0
+              end
+           end
+       end
+   end
+end
+
+local Connect_View = function(Label)
+   local ClickButton = Instance.new("TextButton")
+   ClickButton.Position = Label.Position
+   ClickButton.Size = Label.Size
+   ClickButton.Transparency = 1
+   ClickButton.Parent = Label
+   
+   ClickButton.MouseButton1Down:Connect(function(...)
+       local PlayerText = ClickButton.Parent.Text
+       PlayerText = PlayerText:gsub("\226\128\142", "")
+       if game:GetService("Players"):FindFirstChild(PlayerText) then
+          local Player = game.Players:FindFirstChild(PlayerText)
+          if Player.Character then
+             if CurrentSubject ~= Player.Character then
+                 Viewing = true
+                 CurrentSubject = Player.Character
+             elseif CurrentSubject == Player.Character then
+                 Viewing = false
+                 CurrentSubject = nil
+             end
+          else
+             Viewing = false
+             CurrentSubject = nil
+          end
+       else
+          Viewing = false
+          CurrentSubject = nil
+       end
+   end)
+end
+
+local RunningServiceLol = function(...)
+   if Viewing then
+      if CurrentSubject == nil then
+          Viewing = false 
+          CurrentSubject = nil 
+      end
+      SetCameraView(Viewing)
+   elseif not Viewing then
+      SetCameraView(Viewing)
+   end
+   if game.Players.LocalPlayer.PlayerGui:FindFirstChild("LeaderboardGui") then
+      local LeaderboardGuiR = game.Players.LocalPlayer.PlayerGui:FindFirstChild("LeaderboardGui")
+      
+      if not LeaderboardGuiR:FindFirstChild("Real") then
+         LeaderboardGuiR:Destroy()
+      end
+   end
+   LeaderboardGui.Enabled = true
+   FixNames()
+end
+
+-- connections
+
+Scrolling.ChildAdded:Connect(function(Child)
+    Connect_View(Child)
+end)
+
+game:GetService("RunService").RenderStepped:Connect(RunningServiceLol)
+
+-- finalization
+
+LeaderboardGui.Parent = PlayerGui
