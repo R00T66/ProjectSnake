@@ -1,0 +1,10 @@
+return {
+ ["Amulet of the White King"] = ("https://static.wikia.nocookie.net/rogue-lineage/images/5/50/Wka_New_Model.jpg"),
+ ["Mysterious Artifact"] = ("https://static.wikia.nocookie.net/rogue-lineage/images/1/14/Mysterious_Artifact_%28Real%29.png"),
+ ["Philosopher's Stone"] = ("https://static.wikia.nocookie.net/rogue-lineage/images/d/d8/PhiloRender.png"),
+ ["Lannis's Amulet"] = ("https://static.wikia.nocookie.net/rogue-lineage/images/6/66/LannisRender.png"),
+ ["Spider Cloak"] = ("https://static.wikia.nocookie.net/rogue-lineage/images/a/ab/SCloakRender.png"),
+ ["Fairfrozen"] = ("https://static.wikia.nocookie.net/rogue-lineage/images/0/0d/FairfrozenRender.png"),
+ ["Scroom Key"] = ("https://static.wikia.nocookie.net/rogue-lineage/images/9/90/C85927ceef630bbba8e1f49d5035ec7a.png"),
+ ["Rift Gem"] = ("https://static.wikia.nocookie.net/rogue-lineage/images/5/5c/Rift_Gem.PNG")
+}
