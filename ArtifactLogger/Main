@@ -12,13 +12,12 @@ local HttpService = game:GetService("HttpService")
 -- locales
 
 local Settings = {["BagHook"] = nil, ["BackpackHook"] = nil, ["RogueCookie"] = nil}
-local Artifacts = loadstring(game:HttpGet("https://pastebin.com/raw/ey87P8zZ"))()
+local Artifacts = loadstring(game:HttpGet("https://raw.githubusercontent.com/R00T66/ProjectSnake/main/ArtifactLogger/Artifacts"))()
+local Bankers = loadstring(game:HttpGet("https://raw.githubusercontent.com/R00T66/ProjectSnake/main/ArtifactLogger/Bankers"))()
+
 local Client = Players.LocalPlayer
 local Thrown = workspace:WaitForChild("Thrown")
 
-Artifacts["Old Amulet"] = "https://static.wikia.nocookie.net/rogue-lineage/images/9/90/C85927ceef630bbba8e1f49d5035ec7a.png"
-Settings["BagHook"] = "https://discord.com/api/webhooks/1042577106611224667/AYcGtlbE9CdrI8ZXuNxUx9Wm_0GyIVyttCCUt75LhzA-UxmOlcjYodW4yZwmE-e6sawZ"
-Settings["RogueCookie"] = "erewtweygdfhfdhdrryereftgretg"
 -- functions
 
 local GetPhotoByText = function(Text)
@@ -32,7 +31,19 @@ local GetPhotoByText = function(Text)
 end
 
 local GetNearestBanker = function(Object)
-   return "Desert 4 [DEFAULT]"
+   local ObjPos = Object.Position
+   
+   local Distance = 999999999
+   local Closest = "UNKNOWN"
+   
+   for i, v in pairs(Bankers) do
+      if (v.Position - ObjPos).magnitude < Distance then
+         Distance = (v.Position - ObjPos).magnitude
+         Closest = i
+      end
+   end
+   
+   return Closest
 end
 
 local JoinCheck = function(UserID)
@@ -116,7 +127,7 @@ local CreateEmbed = function(Type, Artifact, Location, Player)
       }   
    elseif Type:lower() == "backpack" then
       contentbody = {
-       content = nil,
+       content = "@everyone",
        embeds = {{
          ["title"] = ("[BACKPACK LOG]"),
          ["description"] = ("[PLAYERS]\n\n" .. GetPlayers()),
@@ -141,8 +152,8 @@ local CreateEmbed = function(Type, Artifact, Location, Player)
 end
 
 local SendHook = function(Hook, Data)
-   syn.request({Url = Hook, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = Data})
-   return true
+   local S = syn.request({Url = Hook, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = Data})
+   return S
 end
 
 local BackpackConnection = function(Player)
@@ -151,15 +162,12 @@ local BackpackConnection = function(Player)
       local IdentifyAndLog = function(Tool)
           for i, v in pairs(Artifacts) do
              if tostring(Tool.Name) == i and not Tool:FindFirstChild("Logged") then
-                
-                local Create_Tag = CreateTag("Logged", Tool)
                 local Embed_Backpack = CreateEmbed("backpack", i, nil, Player)
                 
                 if Settings["BackpackHook"] ~= nil then
-                
+                   local Create_Tag = CreateTag("Logged", Tool)
                    local Hook = Settings["BackpackHook"]
-                   
-                   SendHook(Hook, Embed_Backpack)
+                   local Req = SendHook(Hook, Embed_Backpack)
                 end
              end
           end          
@@ -180,14 +188,12 @@ local CharacterConnection = function(Player)
           for i, v in pairs(Artifacts) do
              if tostring(Tool.Name) == i and not Tool:FindFirstChild("Logged") then
                 
-                local Create_Tag = CreateTag("Logged", Tool)
                 local Embed_Backpack = CreateEmbed("backpack", i, nil, Player)
                 
                 if Settings["BackpackHook"] ~= nil then
-                
+                   local Create_Tag = CreateTag("Logged", Tool)
                    local Hook = Settings["BackpackHook"]
-                   
-                   SendHook(Hook, Embed_Backpack)
+                   local Req = SendHook(Hook, Embed_Backpack)
                 end
              end
           end
@@ -215,8 +221,7 @@ local BagConnection = function(Object)
             
             if Settings["BagHook"] ~= nil then
                local Hook = Settings["BagHook"]
-               
-               SendHook(Hook, Bag_Embed)
+               local Req = SendHook(Hook, Bag_Embed)
             end
          end
       end 
@@ -224,7 +229,7 @@ local BagConnection = function(Object)
 end
 
 local SetupPlayer = function(Player)
-   if Player ~= Client and not Player:FindFirstChild("Connected") or true then
+   if Player ~= Client and not Player:FindFirstChild("Connected") then
       local Tag = CreateTag("Connected", Player)
       
       repeat wait() until Player.Character or Player == nil
@@ -235,6 +240,20 @@ local SetupPlayer = function(Player)
       
       CharacterConnection(Player)
       BackpackConnection(Player)
+   else
+      --
+   end
+end
+
+-- setup 
+
+if _G.Settings ~= nil then
+   if _G.Settings["ArtifactLogger"] ~= nil then
+       local ArtifactLogger_Settings = _G.Settings["ArtifactLogger"]
+       
+       Settings["BagHook"] = ArtifactLogger_Settings["BagHook"]
+       Settings["BackpackHook"] = ArtifactLogger_Settings["BackpackHook"]
+       Settings["RogueCookie"] = ArtifactLogger_Settings["RogueCookie"]
    end
 end
 
