@@ -11,10 +11,6 @@ if game.PlaceId == (5208655184) then
     local Workspace = game:GetService("Workspace")
     local Players = game:GetService("Players")
     
-    -- Globals
-    
-    _G.ActiveSniping = true
-    
     -- Locales
 
     local Client = Players.LocalPlayer
@@ -313,6 +309,7 @@ if game.PlaceId == (5208655184) then
 
     local SetupScript = function()
         if SetupGlobalSettings() ~= false then
+            _G.ActiveSniping = true
             SetupHooks()
             FindAssociatedBanker()
             RunService.Stepped:Connect(RunSnakerBot)
