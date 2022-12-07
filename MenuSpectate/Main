@@ -8,7 +8,6 @@ repeat wait() until game:GetService("Players").LocalPlayer
 local LeaderboardGui = game:GetService("StarterGui"):WaitForChild("LeaderboardGui"):Clone()
 local Scrolling = LeaderboardGui:WaitForChild("MainFrame"):WaitForChild("ScrollingFrame")
 local PlayerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
-local Menu = PlayerGui:WaitForChild("StartMenu", 30)
 local Ext = Instance.new("Folder")
 
 -- defining leaderboard stuff
@@ -24,15 +23,8 @@ PlayerESP.FaceCamera = true
 PlayerESP.Color = Color3.fromRGB(0, 255, 0)
 PlayerESP:Toggle(true)
 
--- menu check
-
-if Menu == nil then
-   return
-end
-
 -- locales
 
-local MenuClient = Menu:WaitForChild("MenuClient")
 local CurrentSubject = nil
 local Viewing = false
 
