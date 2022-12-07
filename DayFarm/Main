@@ -1,0 +1,109 @@
+repeat wait() until game.IsLoaded
+repeat wait() until game.Players.LocalPlayer
+
+local Log_Distance = _G.LogDistance or 1300
+local Log_Active = false
+
+local Danger_Check = _G.DangerCheck or true
+local Too_Close = "No-One"
+
+local Player_Service = game:GetService("Players")
+local Client_Player = Player_Service.LocalPlayer
+
+local Start_Menu = Client_Player:WaitForChild("PlayerGui"):WaitForChild("StartMenu", 10)
+local Menu_Spec = game:HttpGet("https://raw.githubusercontent.com/R00T66/ProjectSnake/main/MenuSpectate/Main")
+
+if Start_Menu ~= nil then
+   local Finish_Remote = Start_Menu:WaitForChild("Finish", 5)
+   
+   Finish_Remote:FireServer()
+   loadstring(Menu_Spec)()
+end
+
+wait(2)
+
+local Client_Part = function()
+   if Client_Player then
+      local Client = Client_Player
+      if Client.Character then
+         if Client.Character:FindFirstChild("HumanoidRootPart") then
+            return Client.Character:FindFirstChild("HumanoidRootPart")
+         end
+         if Client.Character:FindFirstChild("Torso") then
+            return Client.Character:FindFirstChild("HumanoidRootPart")       
+         end
+      end
+   end
+   return nil
+end
+
+local Client_Danger = function()
+   local Danger = false
+   if Client_Player.Character then
+      if Client_Player.Character:FindFirstChild("Danger") then
+         Danger = true
+      end
+   end
+   return Danger
+end
+
+local Block_Random = function()
+    local Account = Client_Player.Name
+    local Players = game:GetService("Players"):GetPlayers()
+    local User = nil
+    repeat wait()
+     User = Players[math.random(1, #Players)]
+    until User ~= game.Players.LocalPlayer
+    if #Players == 1 or (#Players == 2 and User == nil) then
+       return true,"NO-ONE (EMPTY)"
+    end
+    if User ~= nil then
+       local Http = ("http://localhost:7963/BlockUser?Account=" .. Account .. "&UserId=" .. User.UserId)
+       local Req = syn.request({Url = Http, Method = "GET"})
+       local Body = Req.Body
+       local Res = game:GetService("HttpService"):JSONDecode(Body)
+       return true,User,Req,ResTab
+    end
+    return false
+end
+
+local Block_Hop = function()
+   local RBB,RBU,RBR,RBRT = Block_Random()
+   local KickMessage = ("[" .. Too_Close .. "] GOT TOO CLOSE!\n[BLOCKED " .. tostring(RBU) .. "]")
+   if Danger_Check then
+      if Client_Danger() then
+         Block_Random()
+         Client_Player:Kick(KickMessage)
+      else
+         repeat wait() until not Client_Danger()
+         Block_Random()
+         Client_Player:Kick(KickMessage)
+      end
+   end
+   game:GetService("TeleportService"):Teleport(3016661674)
+end
+
+game:GetService("RunService").RenderStepped:Connect(function(...)
+    if Log_Active then
+        Block_Hop()
+        return 
+    end
+    for i, v in pairs(Player_Service:GetChildren()) do
+       if v.Character then
+          if v.Character:FindFirstChild("HumanoidRootPart") then
+             local HumanoidRootPart = v.Character:FindFirstChild("HumanoidRootPart")
+             local ClientRootPart = Client_Part()
+             local Distance = 0
+             if ClientRootPart ~= nil then
+                Distance = (HumanoidRootPart.Position - ClientRootPart.Position).magnitude
+             end
+             if Distance ~= 0 then
+                if Distance <= Log_Distance then
+                   Too_Close = tostring(v.Name)
+                   Log_Active = true
+                end
+             end
+          end
+       end
+    end
+end)
